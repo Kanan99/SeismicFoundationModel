@@ -39,6 +39,9 @@ RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
 # Set working directory
 WORKDIR /workspace
 
+# Pin NumPy to 1.x version BEFORE installing PyTorch
+RUN pip3 install "numpy<2.0.0"
+
 # Install PyTorch with CUDA 11.1 support
 RUN pip3 install torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio==0.8.1 \
     -f https://download.pytorch.org/whl/lts/1.8/torch_lts.html
@@ -46,12 +49,11 @@ RUN pip3 install torch==1.8.1+cu111 torchvision==0.9.1+cu111 torchaudio==0.8.1 \
 # Install specific timm version
 RUN pip3 install timm==0.3.2
 
-# Install other requirements
+# Install other requirements with numpy version constraint
 RUN pip3 install \
-    scikit-learn \
+    "scikit-learn<1.2" \
     matplotlib \
     tensorboard \
-    numpy \
     Pillow \
     jupyter
 
@@ -63,6 +65,12 @@ RUN mkdir -p /workspace/models /workspace/data /workspace/results
 
 # Expose port for Jupyter if needed
 EXPOSE 8888
+
+# Configure Jupyter
+RUN jupyter notebook --generate-config
+RUN echo "c.NotebookApp.ip = '0.0.0.0'" >> /root/.jupyter/jupyter_notebook_config.py
+RUN echo "c.NotebookApp.allow_root = True" >> /root/.jupyter/jupyter_notebook_config.py
+RUN echo "c.NotebookApp.open_browser = False" >> /root/.jupyter/jupyter_notebook_config.py
 
 # Default command
 CMD ["/bin/bash"]
