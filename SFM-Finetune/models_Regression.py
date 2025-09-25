@@ -19,10 +19,9 @@ import timm.models.vision_transformer
 import numpy as np
 from util.msssim import MSSSIM
 class VisionTransformer(timm.models.vision_transformer.VisionTransformer):
-    """ Vision Transformer with support for global average pooling
-    """
-    def __init__(self, global_pool=False,Interpolation=False, **kwargs):
-        super(VisionTransformer, self).__init__(**kwargs)
+    """ Vision Transformer with support for global average pooling """
+    def __init__(self, global_pool=False, Interpolation=False, in_chans=1, **kwargs):
+        super(VisionTransformer, self).__init__(in_chans=in_chans, **kwargs)
 
         self.global_pool = global_pool
         self.interpolation = Interpolation
@@ -37,7 +36,8 @@ class VisionTransformer(timm.models.vision_transformer.VisionTransformer):
             norm_layer = kwargs['norm_layer']
             embed_dim = kwargs['embed_dim']
             self.fc_norm = norm_layer(embed_dim)
-            del self.norm  # remove the original norm
+            del self.norm
+
             
     def generate_mask(self,input_tensor, ratio):
         mask = torch.zeros_like(input_tensor)
@@ -216,7 +216,7 @@ def vit_base_patch16(**kwargs):
 def vit_large_patch16(**kwargs):
     model = VisionTransformer(
         patch_size=16, embed_dim=1024, depth=24, num_heads=16, mlp_ratio=4, qkv_bias=True,
-        norm_layer=partial(nn.LayerNorm, eps=1e-6), **kwargs)
+        norm_layer=partial(nn.LayerNorm, eps=1e-6), in_chans=1 ,**kwargs)
     return model
 
 
