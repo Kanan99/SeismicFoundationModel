@@ -7,7 +7,7 @@ if [ -z "$USERNAME" ] || [ -z "$HOST_PORT" ]; then
     exit 1
 fi
 
-docker run -it --rm \
+docker run --privileged  --gpus all -it --rm \
   --name sfm-$USERNAME \
   -v "$(pwd)":/workspace \
   -p $HOST_PORT:8888 \
