@@ -1,8 +1,15 @@
 #!/bin/bash
 USERNAME=$1
-if [ -z "$USERNAME" ]; then
-  echo "Usage: ./run.sh <username>"
-  exit 1
+HOST_PORT=$2
+
+if [ -z "$USERNAME" ] || [ -z "$HOST_PORT" ]; then
+    echo "Usage: ./run.sh <username> <host_port>"
+    exit 1
 fi
 
-docker run -it --name sfm-$USERNAME -v $(pwd):/workspace sfm-env:dev
+docker run -it --rm \
+  --name sfm-$USERNAME \
+  -v "$(pwd)":/workspace \
+  -p $HOST_PORT:8888 \
+  sfm-env
+

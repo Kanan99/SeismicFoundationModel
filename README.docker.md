@@ -1,4 +1,4 @@
-eismic Foundation Model – Docker Environment
+# Seismic Foundation Model – Docker Environment
 
 This repository provides a Docker environment for running and developing the Seismic Foundation Model (SFM). Follow the steps below to build and run containers consistently across the team.
 
@@ -27,25 +27,18 @@ Start a development container:
 ### 3. Run Jupyter Notebook
 Start a Jupyter container with GPU support:
 
+Inside of the container run: 
 ```bash
-./run-jupyter.sh <username> <host_port>
+
+
+./run-jupyter.sh
 ```
 
-Example:
-
-```bash
-./run-jupyter.sh alice 8888
-./run-jupyter.sh bob 8889
-```
-
-Then, inside the container, start Jupyter:
-
-```bash
-jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token=''
-```
+This automatically starts Jupyter Notebook inside the container and makes it accessible at `http://localhost:<host_port>`.
 
 * Each person should use a unique `<host_port>` (e.g. 8888, 8889, 8890).
 * The container will be named `sfm-<username>-jupyter`.
+* No authentication token is required (token disabled for development convenience).
 
 ## Useful Commands
 
